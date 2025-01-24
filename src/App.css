@@ -1,0 +1,58 @@
+
+/* why we use important review */
+
+
+.App{
+ background: rgb(175,147,206);
+background: linear-gradient(90deg, rgba(175,147,206,1) 24%, rgba(160,211,239,1) 62%, rgba(218,237,183,1) 100%);
+
+}
+.toDo{
+  max-width:600px;
+  margin: 100px;
+  justify-content: center;
+  align-items: center;
+  
+
+}
+
+.border{
+  border:1px solid red;
+}
+.iconHover{
+  transition: all 0.3s !important;
+}
+.iconHover:hover{
+  background-color: rgb(199, 195, 195) !important ;
+  box-shadow: 0px 7px 7px rgba(0, 0, 0, 0.02) !important; 
+}
+.toDoCard{
+  transition: all 0.2s !important;
+}
+.toDoCard:hover{
+  padding-top: 20px ;
+  padding-bottom: 20px ;
+  box-shadow: 0px 7px 7px rgba(0, 0, 0, 0.4) !important; 
+
+}
+
+/*==== CUSTOM FONTS ====*/
+@font-face{
+  font-family: A;
+  src:url("../public/fonts/static/Alexandria-Bold.ttf");
+  font-weight: 900;
+}
+@font-face{
+  font-family: A;
+  src:url("../public/fonts/static/Alexandria-Light.ttf");
+  font-weight: 300;
+}
+@font-face{
+  font-family: A;
+  src:url("../public/fonts/static/Alexandria-Regular.ttf");
+  font-weight: 600;
+}
+
+
+
+

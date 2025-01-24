@@ -1,0 +1,26 @@
+.header{
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height:80px;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+
+.logo img{
+    height:180px;
+    background-color: "red";
+    margin-left: 50px;
+    
+    
+
+
+}
+.appTitle{
+    color:#A0D3EF;
+    font-size: 18px;
+    margin-right: 50px;
+
+
+}

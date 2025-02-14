@@ -17,19 +17,15 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 
-export default function ToDo({ todo, handleCheck }) {
-  function handleDeleteConforim() {
-    const updatedTodos = todos.filter((t) => {
-      // todo the clicked task , fiter in every iteration returns true or false
-      // shortcut return t.id!=todo.id
-      return t.id != todo.id;
-    });
+export default function ToDo({ todo ,openDeleteDialog }) {
 
-    setTodos(updatedTodos);
-    localStorage.setItem("todos" ,JSON.stringify(updatedTodos))
-
-
+  function handleDeleteClick() {
+    openDeleteDialog(todo);
   }
+
+
+
+
   function handleUpdateConforim() {
     const updatedTodos = todos.map((t) => {
       if (t.id == todo.id) {
@@ -43,13 +39,10 @@ export default function ToDo({ todo, handleCheck }) {
    handleUpdateDialogClose();
   }
 
-  function handleDeleteDialogClose() {
-    setDeleteDialog(false);
-  }
+
   function handleUpdateDialogClose() {
     setUpdateDialog(false);
   }
-  const [deleteDialog, setDeleteDialog] = useState(false);
   const [updateDialog, setUpdateDialog] = useState(false);
   const [updatedTodo ,setUpdatedTodo]=useState({
     title:todo.title,
@@ -68,39 +61,14 @@ export default function ToDo({ todo, handleCheck }) {
     localStorage.setItem("todos" ,JSON.stringify(updatedTodos)) 
 
   }
-  function handleDeleteClick() {
-    setDeleteDialog(true);
-  }
+
   function handleUpdateClick() {
     setUpdateDialog(true);
   }
 
   return (
     <>
-      {/* DELETE DIALOG*/}
-      <Dialog
-        style={{ direction: "rtl" }}
-        open={deleteDialog}
-        onClose={handleDeleteDialogClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          هل أنت متأكد من حذف المهمة
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            لا يمكن التراجع عن حذف المهمة بعد إتمامه
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDeleteDialogClose}>إغلاق</Button>
-          <Button autoFocus onClick={handleDeleteConforim}>
-            نعم , قم بالحذف
-          </Button>
-        </DialogActions>
-      </Dialog>
-      {/* == DELETE DIALOG ==*/}
+
       {/* UPDATE DIALOG*/}
       <Dialog
         style={{ direction: "rtl" }}

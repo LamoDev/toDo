@@ -12,7 +12,7 @@ export default function Footer() {
                     width: "60%",
                     justifyContent:"space-between",
                     marginTop:"50px",
-                    height: "70px", // تقليل ارتفاع الفوتر
+                    height: "70px", 
                     borderRadius:"100px",
                     marginBottom:"20px"
                     
@@ -26,11 +26,11 @@ export default function Footer() {
                         flexDirection: "row",
                         alignItems: "center",
                         color: "#A0D3EF",
-                        gap: "5px", // مسافة بين النص والأيقونة
+                        gap: "5px",
                         marginRight:"20px"
                     }}
                 >
-                    <h3 style={{ margin: 0 }}>مهام صغيرة تؤدي إلى نجاحات كبيرة</h3>
+                    <h3 style={{ margin: 0 }}>   المهام الصغيرة تؤدي لنجاحات كبيرة</h3>
                     <MilitaryTechOutlinedIcon />
                 </div>
 

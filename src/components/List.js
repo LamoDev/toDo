@@ -25,14 +25,23 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { TodoContext } from "../contexts/todosContext";
 import { v4 as uuidv4 } from "uuid";
+import { useSnackbar} from "../contexts/SnackbarContext";
 
 export default function List() {
 
+//contexts 
+const { todos, setTodos } = useContext(TodoContext);
 
-  // states 
-  const { todos, setTodos } = useContext(TodoContext);
+
+const {showHideSnackbar}=useSnackbar()
+
+
+
+
+  // states
   const [deleteDialog, setDeleteDialog] = useState(false);
-  const [dialogTodo,setDialogTodo]=useState(null)
+  const [updateDialog, setUpdateDialog] = useState(false);
+  const [dialogTodo, setDialogTodo] = useState(null);
   const [titleInput, setTitleInput] = useState("");
   const [displayedTodosType, setDisplayedTodosType] = useState("all");
   //filtering arrays
@@ -71,7 +80,6 @@ export default function List() {
     setDisplayedTodosType(e.target.value);
   }
 
-
   function handleAddClick() {
     const newTodo = {
       id: uuidv4(),
@@ -79,36 +87,74 @@ export default function List() {
       details: "",
       isCompleted: false,
     };
-  }
+    const updatedTodos=[...todos , newTodo ]
+    setTodos(updatedTodos);
+    localStorage.setItem("todos" ,JSON.stringify(updatedTodos))
+    setTitleInput("")
+    showHideSnackbar("تم إضافه مهمة بنجاح")
+  };
+  
 
-  // handalers function
-
+  //Delete handalers
 
   function handleDeleteDialogClose() {
     setDeleteDialog(false);
   }
   function showDeleteDialog(todo) {
-    setDialogTodo(todo)
+    setDialogTodo(todo);
     setDeleteDialog(true);
   }
 
   function handleDeleteConforim() {
-    console.log(dialogTodo)
+    console.log(dialogTodo);
 
     const updatedTodos = todos.filter((t) => {
       // // todo the clicked task , filter in every iteration returns true or false
       // // shortcut return t.id!=todo.id
-     return t.id != dialogTodo.id;
+      return t.id != dialogTodo.id;
     });
 
     setTodos(updatedTodos);
     localStorage.setItem("todos", JSON.stringify(updatedTodos));
-    handleDeleteDialogClose()
+    handleDeleteDialogClose();
+    showHideSnackbar("تم الحذف بنجاح")
+
   }
 
+  // Update handlers
+
+  function handleUpdateDialog(todo) {
+    setDialogTodo(todo);
+    setUpdateDialog(true);
+  }
+
+  function handleUpdateDialogClose() {
+    setUpdateDialog(false);
+  }
+  function handleUpdateConforim() {
+    const updatedTodos = todos.map((t) => {
+      if (t.id == dialogTodo.id) {
+        return { ...t, title: dialogTodo.title, details: dialogTodo.details };
+      } else {
+        return t;
+      }
+    });
+    setTodos(updatedTodos);
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
+    showHideSnackbar("تم التحديث بنجاح")
+
+    handleUpdateDialogClose()
+  }
 
   const todosJSX = todosTobeRender.map((t) => {
-    return <ToDo key={t.id} todo={t} openDeleteDialog={showDeleteDialog} />;
+    return (
+      <ToDo
+        key={t.id}
+        todo={t}
+        openDeleteDialog={showDeleteDialog}
+        openUpdateDialog={handleUpdateDialog}
+      />
+    );
   });
 
   return (
@@ -137,6 +183,56 @@ export default function List() {
         </DialogActions>
       </Dialog>
       {/* == DELETE DIALOG ==*/}
+      {/* UPDATE DIALOG*/}
+      <Dialog
+        style={{ direction: "rtl" }}
+        open={updateDialog}
+        onClose={handleUpdateDialogClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          تعديل مهمة : {dialogTodo ? dialogTodo.title : ""}
+        </DialogTitle>
+        <DialogContent>
+          <TextField
+            value={dialogTodo ? dialogTodo.title : ""}
+            autoFocus
+            required
+            margin="dense"
+            id="name"
+            name="email"
+            label="عنوان المهمة "
+            fullWidth
+            variant="standard"
+            onChange={(e) => {
+              //{ ...dialogTodo, title: e.target.value }
+              setDialogTodo({ ...dialogTodo, title: e.target.value });
+            }}
+          />
+          <TextField
+            value={dialogTodo ? dialogTodo.details : ""}
+            autoFocus
+            required
+            margin="dense"
+            id="name"
+            name="email"
+            label="تفاصيل المهمة "
+            fullWidth
+            variant="standard"
+            onChange={(e) => {
+              setDialogTodo({ ...dialogTodo, details: e.target.value });
+            }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleUpdateDialogClose}>إغلاق</Button>
+          <Button autoFocus onClick={handleUpdateConforim}>
+            تحديث
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* == UPDATE DIALOG ==*/}
       <Container maxWidth="sm" style={{ marginTop: "20px" }}>
         <Card
           sx={{ minWidth: 275 }}

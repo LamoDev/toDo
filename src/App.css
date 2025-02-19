@@ -1,7 +1,4 @@
 
-/* why we use important review */
-
-
 .App{
  background: rgb(175,147,206);
 background: linear-gradient(90deg, rgba(175,147,206,1) 24%, rgba(160,211,239,1) 62%, rgba(218,237,183,1) 100%);
@@ -12,8 +9,6 @@ background: linear-gradient(90deg, rgba(175,147,206,1) 24%, rgba(160,211,239,1) 
   margin: 100px;
   justify-content: center;
   align-items: center;
-  
-
 }
 
 .border{

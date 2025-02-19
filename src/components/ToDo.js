@@ -9,47 +9,29 @@ import IconButton from "@mui/material/IconButton";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { useContext, useState } from "react";
 import { TodoContext } from "../contexts/todosContext";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import TextField from "@mui/material/TextField";
+import { SnackbarContext, useSnackbar } from "../contexts/SnackbarContext";
 
-export default function ToDo({ todo ,openDeleteDialog }) {
+export default function ToDo({ todo, openDeleteDialog, openUpdateDialog }) {
 
+  // contexts
+const {showHideSnackbar}=useSnackbar();
+const { todos, setTodos } = useContext(TodoContext);
+
+// handlers 
   function handleDeleteClick() {
     openDeleteDialog(todo);
+    
   }
-
-
-
-
-  function handleUpdateConforim() {
-    const updatedTodos = todos.map((t) => {
-      if (t.id == todo.id) {
-        return {...t, title:updatedTodo.title , details:updatedTodo.details}
-      }else {
-        return t
-      }
-    });
-    setTodos(updatedTodos);
-    localStorage.setItem("todos" ,JSON.stringify(updatedTodos))
-   handleUpdateDialogClose();
+  function handleUpdateClick() {
+    openUpdateDialog(todo);
   }
+  const [updatedTodo, setUpdatedTodo] = useState({
+    title: todo.title,
+    details: todo.details,
+  });
 
 
-  function handleUpdateDialogClose() {
-    setUpdateDialog(false);
-  }
-  const [updateDialog, setUpdateDialog] = useState(false);
-  const [updatedTodo ,setUpdatedTodo]=useState({
-    title:todo.title,
-    details:todo.details
-  })
 
-  const { todos, setTodos } = useContext(TodoContext);
   function handleCheckClick() {
     const updatedTodos = todos.map((t) => {
       if (t.id == todo.id) {
@@ -58,69 +40,14 @@ export default function ToDo({ todo ,openDeleteDialog }) {
       return t;
     });
     setTodos(updatedTodos);
-    localStorage.setItem("todos" ,JSON.stringify(updatedTodos)) 
-
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
+    showHideSnackbar("تم التعديل")
   }
 
-  function handleUpdateClick() {
-    setUpdateDialog(true);
-  }
+
 
   return (
     <>
-
-      {/* UPDATE DIALOG*/}
-      <Dialog
-        style={{ direction: "rtl" }}
-        open={updateDialog}
-        onClose={handleUpdateDialogClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          تعديل مهمة : {todo.title}
-        </DialogTitle>
-        <DialogContent>
-          <TextField
-            value={updatedTodo.title}
-            autoFocus
-            required
-            margin="dense"
-            id="name"
-            name="email"
-            label="عنوان المهمة "
-            fullWidth
-            variant="standard"
-            onChange={(e)=>{
-              setUpdatedTodo({...updatedTodo , title:e.target.value})
-            }
-
-            }
-          />
-          <TextField
-            value={updatedTodo.details}
-            autoFocus
-            required
-            margin="dense"
-            id="name"
-            name="email"
-            label="تفاصيل المهمة "
-            fullWidth
-            variant="standard"
-            onChange={(e)=>{
-              setUpdatedTodo({...updatedTodo , details:e.target.value})
-            }}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleUpdateDialogClose}>إغلاق</Button>
-          <Button autoFocus onClick={handleUpdateConforim}>
-            تحديث
-          </Button>
-        </DialogActions>
-      </Dialog>
-      {/* == UPDATE DIALOG ==*/}
-
       <Card
         className="toDoCard"
         sx={{
@@ -135,7 +62,11 @@ export default function ToDo({ todo ,openDeleteDialog }) {
             <Grid size={8}>
               <Typography
                 variant="h5"
-                style={{ textAlign: "right", fontWeight: "600" , textDecoration:todo.isCompleted?"line-through":"none" }}
+                style={{
+                  textAlign: "right",
+                  fontWeight: "600",
+                  textDecoration: todo.isCompleted ? "line-through" : "none",
+                }}
               >
                 {todo.title}
               </Typography>
@@ -179,7 +110,6 @@ export default function ToDo({ todo ,openDeleteDialog }) {
                   color: "#2E1B4B",
                   background: "white",
                   border: "solid #2E1B4B",
-                 
                 }}
               >
                 <EditOutlinedIcon />

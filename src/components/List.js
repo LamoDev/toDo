@@ -17,20 +17,24 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToDo from "./ToDo";
 import Grid from "@mui/material/Grid2";
 import TextField from "@mui/material/TextField";
-import { useState, useContext, useEffect, useMemo } from "react";
+import { useState, useContext, useEffect, useMemo ,useReducer } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { TodoContext } from "../contexts/todosContext";
+import { useTodos,useTodosDispatch } from "../contexts/todosContext";
 import { v4 as uuidv4 } from "uuid";
 import { useSnackbar} from "../contexts/SnackbarContext";
-
+import todosReducer from '../reducers/todoReducer'
 export default function List() {
 
+// reducers 
+
+
 //contexts 
-const { todos, setTodos } = useContext(TodoContext);
+const todos=useTodos()
+const dispatch=useTodosDispatch()
 
 
 const {showHideSnackbar}=useSnackbar()
@@ -72,8 +76,9 @@ const {showHideSnackbar}=useSnackbar()
   }
 
   useEffect(() => {
-    const storedTodos = JSON.parse(localStorage.getItem("todos")) ?? [];
-    setTodos(storedTodos);
+    //Doesn't have a payload which fine !!
+    dispatch({type:"get"})
+
   }, []);
 
   function changeDisplayedType(e) {
@@ -81,15 +86,8 @@ const {showHideSnackbar}=useSnackbar()
   }
 
   function handleAddClick() {
-    const newTodo = {
-      id: uuidv4(),
-      title: titleInput,
-      details: "",
-      isCompleted: false,
-    };
-    const updatedTodos=[...todos , newTodo ]
-    setTodos(updatedTodos);
-    localStorage.setItem("todos" ,JSON.stringify(updatedTodos))
+    // title input is needed in the redecer to add a todo with title 
+    dispatch({type:"added" , payload:{newTitle:titleInput}})
     setTitleInput("")
     showHideSnackbar("تم إضافه مهمة بنجاح")
   };
@@ -106,16 +104,7 @@ const {showHideSnackbar}=useSnackbar()
   }
 
   function handleDeleteConforim() {
-    console.log(dialogTodo);
-
-    const updatedTodos = todos.filter((t) => {
-      // // todo the clicked task , filter in every iteration returns true or false
-      // // shortcut return t.id!=todo.id
-      return t.id != dialogTodo.id;
-    });
-
-    setTodos(updatedTodos);
-    localStorage.setItem("todos", JSON.stringify(updatedTodos));
+    dispatch({type:"deleted" , payload:dialogTodo})
     handleDeleteDialogClose();
     showHideSnackbar("تم الحذف بنجاح")
 
@@ -132,17 +121,8 @@ const {showHideSnackbar}=useSnackbar()
     setUpdateDialog(false);
   }
   function handleUpdateConforim() {
-    const updatedTodos = todos.map((t) => {
-      if (t.id == dialogTodo.id) {
-        return { ...t, title: dialogTodo.title, details: dialogTodo.details };
-      } else {
-        return t;
-      }
-    });
-    setTodos(updatedTodos);
-    localStorage.setItem("todos", JSON.stringify(updatedTodos));
+    dispatch({type:"updated", payload:dialogTodo})
     showHideSnackbar("تم التحديث بنجاح")
-
     handleUpdateDialogClose()
   }
 

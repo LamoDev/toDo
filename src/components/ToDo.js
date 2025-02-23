@@ -8,14 +8,14 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import IconButton from "@mui/material/IconButton";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { useContext, useState } from "react";
-import { TodoContext } from "../contexts/todosContext";
+import { useTodos,useTodosDispatch } from "../contexts/todosContext";
 import { SnackbarContext, useSnackbar } from "../contexts/SnackbarContext";
 
 export default function ToDo({ todo, openDeleteDialog, openUpdateDialog }) {
-
   // contexts
 const {showHideSnackbar}=useSnackbar();
-const { todos, setTodos } = useContext(TodoContext);
+
+const dispatch=useTodosDispatch()
 
 // handlers 
   function handleDeleteClick() {
@@ -25,27 +25,11 @@ const { todos, setTodos } = useContext(TodoContext);
   function handleUpdateClick() {
     openUpdateDialog(todo);
   }
-  const [updatedTodo, setUpdatedTodo] = useState({
-    title: todo.title,
-    details: todo.details,
-  });
-
-
 
   function handleCheckClick() {
-    const updatedTodos = todos.map((t) => {
-      if (t.id == todo.id) {
-        t.isCompleted = !t.isCompleted;
-      }
-      return t;
-    });
-    setTodos(updatedTodos);
-    localStorage.setItem("todos", JSON.stringify(updatedTodos));
+    dispatch({type:"toggledCompleated" , payload:todo})
     showHideSnackbar("تم التعديل")
   }
-
-
-
   return (
     <>
       <Card

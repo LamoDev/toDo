@@ -2,13 +2,12 @@ import logo from "./logo.svg";
 import "./App.css";
 import List from "./components/List";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import todoContext, { TodoContext } from "./contexts/todosContext";
 import { useContext, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import Footer from "./components/Footer";
 import MySnackbar from "./components/MySnackbar";
 import {SnackbarPovider} from "./contexts/SnackbarContext";
-
+import {TodosProvider} from './contexts/todosContext'
 uuidv4();
 
 const initialTodos = [
@@ -41,6 +40,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      <TodosProvider>
       <SnackbarPovider>
         <div
           className="App"
@@ -52,13 +52,12 @@ function App() {
             direction: "rtl",
           }}
         >
-          <TodoContext.Provider value={{ todos, setTodos }}>
             <List />
-          </TodoContext.Provider>
 
           <Footer />
         </div>
       </SnackbarPovider>
+      </TodosProvider>
     </ThemeProvider>
   );
 }
